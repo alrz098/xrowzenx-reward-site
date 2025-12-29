@@ -62,7 +62,10 @@ canvas{position:fixed;inset:0;z-index:0}
   transform-origin:20% 90%;
   animation:swing 3s ease-in-out infinite;
 }
-@keyframes swing{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(10deg)}}
+@keyframes swing{
+  0%,100%{transform:rotate(-6deg)}
+  50%{transform:rotate(10deg)}
+}
 .main-card{
   position:relative;
   z-index:4;
@@ -88,25 +91,6 @@ canvas{position:fixed;inset:0;z-index:0}
 .game:hover{box-shadow:0 0 15px var(--accent);}
 .game img{width:90px;height:50px;border-radius:10px;object-fit:cover}
 .game .status{font-size:14px;color:#7CFF7C}
-#musicOverlay{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.85);
-  z-index:999;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  cursor:pointer;
-}
-#musicOverlay span{
-  color:white;
-  font-size:28px;
-  padding:18px 40px;
-  border:2px solid white;
-  border-radius:40px;
-  animation:pulse 1.5s infinite;
-}
-@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
 #muteBtn{position:fixed;bottom:20px;right:20px;z-index:20;font-size:26px;cursor:pointer}
 .admin-login{
   position:fixed;
