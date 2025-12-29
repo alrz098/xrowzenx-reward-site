@@ -5,19 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Game Rewards</title>
 <link rel="stylesheet" href="style.css">
-<link rel="manifest" href="manifest.json">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<link rel="manifest" href="manifest.json">
 </head>
-<body class="theme-dark">
+<body>
 
 <audio id="bgMusic" loop>
   <source src="music/christmas.mp3" type="audio/mpeg">
 </audio>
 
-<div id="musicOverlay"><span>Click to enter</span></div>
-
-<a href="admin/login.html" class="admin-login">Admin Login</a>
+<a href="/admin/login.html" class="admin-login">Admin Login</a>
 
 <div class="theme-switch">
   <button onclick="setTheme('light')">Light</button>
@@ -65,7 +63,6 @@
     <span>MURDER MYSTERY 2</span>
     <div class="status"></div>
   </div>
-
 </div>
 
 <div id="verify"><div class="box">Verifying…</div></div>
@@ -75,6 +72,73 @@
 <canvas id="gifts"></canvas>
 
 <script src="script.js"></script>
+<script>
+// SUPABASE CONFIG
+const SUPABASE_URL = "YOUR_SUPABASE_URL";
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// TRACK VISIT
+async function trackVisit(){
+  await supabase.from('visits').insert([{timestamp: new Date()}]);
+}
+trackVisit();
+
+// TRACK SOCIAL
+async function trackSocial(platform){
+  await supabase.from('social_clicks').insert([{platform, timestamp: new Date()}]);
+}
+
+// TRACK GAME
+async function trackGame(game){
+  await supabase.from('game_clicks').insert([{game_name: game, timestamp: new Date()}]);
+}
+
+// VERIFY FUNCTION
+function startVerify(el, link){
+  if(el.classList.contains("done")) return;
+  document.getElementById("verify").style.display="flex";
+  setTimeout(()=>{
+    document.getElementById("verify").style.display="none";
+    el.classList.add("done");
+    el.querySelector(".status").innerHTML="Reward unlocked <i class='fa-solid fa-check'></i>";
+    trackGame(link);
+    window.open(link,"_blank");
+  },1200);
+}
+
+// THEME SWITCH
+function setTheme(t){document.body.className="theme-"+t;}
+
+// MUSIC
+const music = document.getElementById("bgMusic");
+music.volume = 0.75;
+music.play();
+const muteBtn = document.getElementById("muteBtn");
+muteBtn.addEventListener("click", ()=>{
+  music.muted = !music.muted;
+  muteBtn.innerHTML = music.muted
+    ? '<i class="fa-solid fa-volume-xmark"></i>'
+    : '<i class="fa-solid fa-volume-high"></i>';
+});
+
+// SNOW + GIFTS ANIMATION
+const snow=document.getElementById("snow"), gifts=document.getElementById("gifts"),
+sx=snow.getContext("2d"), gx=gifts.getContext("2d");
+let w,h;
+function resize(){w=snow.width=gifts.width=innerWidth; h=snow.height=gifts.height=innerHeight;}
+resize(); onresize=resize;
+const flakes=[...Array(70)].map(()=>({x:Math.random()*w,y:Math.random()*h,r:Math.random()*3+1,s:Math.random()+.5}));
+const colors=["#ffd700","#8a2be2","#ff0000","#00bfff","#00ff00","#ffffff"];
+const boxes=[...Array(25)].map(()=>({x:Math.random()*w,y:Math.random()*h,s:Math.random()+.4,c:colors[Math.floor(Math.random()*colors.length)]}));
+(function loop(){
+  sx.clearRect(0,0,w,h);
+  gx.clearRect(0,0,w,h);
+  flakes.forEach(f=>{sx.fillStyle="white"; sx.beginPath(); sx.arc(f.x,f.y,f.r,0,7); sx.fill(); f.y+=f.s; if(f.y>h) f.y=0;});
+  boxes.forEach(b=>{gx.fillStyle=b.c; gx.fillRect(b.x,b.y,14,14); gx.fillStyle="#fff"; gx.fillRect(b.x+6,b.y,2,14); gx.fillRect(b.x,b.y+6,14,2); b.y+=b.s; if(b.y>h) b.y=0;});
+  requestAnimationFrame(loop);
+})();
+</script>
 
 </body>
 </html>
