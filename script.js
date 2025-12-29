@@ -1,32 +1,23 @@
 function setTheme(t){document.body.className="theme-"+t;}
 
-const snow=document.getElementById("snow"),
-gifts=document.getElementById("gifts"),
-sx=snow.getContext("2d"),
-gx=gifts.getContext("2d");
-let w,h;
-function resize(){w=snow.width=gifts.width=innerWidth;h=snow.height=gifts.height=innerHeight;}
-resize();onresize=resize;
-const flakes=[...Array(70)].map(()=>({x:Math.random()*w,y:Math.random()*h,r:Math.random()*3+1,s:Math.random()+.5}));
-const colors=["#ffd700","#8a2be2","#ff0000","#00bfff","#00ff00","#ffffff"];
-const boxes=[...Array(25)].map(()=>({x:Math.random()*w,y:Math.random()*h,s:Math.random()+.4,c:colors[Math.floor(Math.random()*colors.length)]}));
+// Snow effect (basic)
+const snow = document.getElementById("snow");
+const canvas = document.createElement("canvas");
+snow.appendChild(canvas);
+const ctx = canvas.getContext("2d");
+let w = canvas.width = window.innerWidth;
+let h = canvas.height = window.innerHeight;
+window.addEventListener("resize",()=>{w=canvas.width=window.innerWidth;h=canvas.height=window.innerHeight;});
+const flakes = [...Array(70)].map(()=>({x:Math.random()*w,y:Math.random()*h,r:Math.random()*3+1,s:Math.random()+.5}));
 (function loop(){
-  sx.clearRect(0,0,w,h);
-  gx.clearRect(0,0,w,h);
-  flakes.forEach(f=>{sx.fillStyle="white";sx.beginPath();sx.arc(f.x,f.y,f.r,0,7);sx.fill();f.y+=f.s;if(f.y>h)f.y=0;});
-  boxes.forEach(b=>{gx.fillStyle=b.c;gx.fillRect(b.x,b.y,14,14);gx.fillStyle="#fff";gx.fillRect(b.x+6,b.y,2,14);gx.fillRect(b.x,b.y+6,14,2);b.y+=b.s;if(b.y>h)b.y=0;});
+  ctx.clearRect(0,0,w,h);
+  flakes.forEach(f=>{
+    ctx.fillStyle="white";
+    ctx.beginPath();
+    ctx.arc(f.x,f.y,f.r,0,Math.PI*2);
+    ctx.fill();
+    f.y+=f.s;
+    if(f.y>h) f.y=0;
+  });
   requestAnimationFrame(loop);
 })();
-
-const music=document.getElementById("bgMusic");
-const muteBtn=document.getElementById("muteBtn");
-music.volume=.75;
-
-muteBtn.addEventListener("click",()=>{music.muted=!music.muted;muteBtn.innerHTML=music.muted?'<i class="fa-solid fa-volume-xmark"></i>':'<i class="fa-solid fa-volume-high"></i>';});
-
-function startVerify(el, link){
-  if(el.classList.contains("done")) return;
-  el.classList.add("done");
-  el.querySelector(".status").innerHTML="Reward unlocked <i class='fa-solid fa-check'></i>";
-  window.open(link,"_blank");
-}

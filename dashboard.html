@@ -8,46 +8,24 @@
 </head>
 <body class="theme-dark">
 
-<canvas id="snow"></canvas>
-<canvas id="gifts"></canvas>
-
-<div class="main-card" style="max-width:1000px;">
+<div class="main-card" style="max-width:1000px;margin:50px auto;">
   <h1>Admin Dashboard</h1>
-  <div style="display:flex;gap:20px;margin-bottom:20px;">
-    <button onclick="loadData('game')">Game Visits</button>
-    <button onclick="loadData('social')">Social Visits</button>
-  </div>
-  <div id="dataArea" style="margin-top:20px;color:white;"></div>
+  <h2>Game Visits (Example)</h2>
+  <ul>
+    <li>PS99: 120 visits</li>
+    <li>RIVALS: 95 visits</li>
+    <li>ADOPT ME: 80 visits</li>
+    <li>STEAL A BRAINROT: 60 visits</li>
+    <li>MURDER MYSTERY 2: 50 visits</li>
+  </ul>
+
+  <h2>Social Visits (Example)</h2>
+  <ul>
+    <li>YouTube: 40</li>
+    <li>Discord: 25</li>
+    <li>Instagram: 30</li>
+  </ul>
 </div>
-
-<script src="../script.js"></script>
-<script>
-const sampleData = {
-    game:[
-        {name:"PS99", clicks:120},
-        {name:"RIVALS", clicks:95},
-        {name:"ADOPT ME", clicks:150},
-        {name:"STEAL A BRAINROT", clicks:80},
-        {name:"MURDER MYSTERY 2", clicks:60}
-    ],
-    social:[
-        {name:"YouTube", clicks:40},
-        {name:"Discord", clicks:25},
-        {name:"Instagram", clicks:30}
-    ]
-};
-
-function loadData(type){
-    const area = document.getElementById("dataArea");
-    const data = sampleData[type];
-    let html = "<table style='width:100%;color:white;border-collapse:collapse'><tr><th style='border-bottom:1px solid white'>Item</th><th style='border-bottom:1px solid white'>Clicks</th></tr>";
-    data.forEach(d=>{
-        html += `<tr><td style='padding:6px 0'>${d.name}</td><td style='padding:6px 0'>${d.clicks}</td></tr>`;
-    });
-    html += "</table>";
-    area.innerHTML = html;
-}
-</script>
 
 </body>
 </html>
